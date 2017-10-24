@@ -21,12 +21,22 @@ object Huffman {
     abstract class CodeTree
   case class Fork(left: CodeTree, right: CodeTree, chars: List[Char], weight: Int) extends CodeTree
   case class Leaf(char: Char, weight: Int) extends CodeTree
-  
+
 
   // Part 1: Basics
-    def weight(tree: CodeTree): Int = ??? // tree match ...
-  
-    def chars(tree: CodeTree): List[Char] = ??? // tree match ...
+    def weight(tree: CodeTree): Int = {
+      tree match {
+        case f : Fork => f.weight
+        case l : Leaf => l.weight
+      }
+    } // tree match ...
+
+    def chars(tree: CodeTree): List[Char] = {
+      tree match {
+        case f : Fork => f.chars
+        case l : Leaf => List(l.char)
+      }
+    } // tree match ...
   
   def makeCodeTree(left: CodeTree, right: CodeTree) =
     Fork(left, right, chars(left) ::: chars(right), weight(left) + weight(right))
@@ -69,7 +79,21 @@ object Huffman {
    *       println("integer is  : "+ theInt)
    *   }
    */
-    def times(chars: List[Char]): List[(Char, Int)] = ???
+    def times(chars: List[Char]): List[(Char, Int)] = {
+      var p : List[(Char, Int)] = List()
+      for(e <- chars) {
+        p = (e, find(chars, e)) :: p
+      }
+      p.distinct
+    }
+
+    def find(l: List[Char], z: Char): Int = {
+      var count = 0
+      for (e <- l) {
+        if (e == z) count = count + 1
+      }
+      count
+    }
   
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -78,12 +102,16 @@ object Huffman {
    * head of the list should have the smallest weight), where the weight
    * of a leaf is the frequency of the character.
    */
-    def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+    def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = {
+      var p : List[Leaf] = List()
+      freqs.sortWith(_._2 > _._2).foreach(k => p = Leaf(k._1, k._2) :: p)
+      p
+    }
   
   /**
    * Checks whether the list `trees` contains only one single code tree.
    */
-    def singleton(trees: List[CodeTree]): Boolean = ???
+    def singleton(trees: List[CodeTree]): Boolean = trees.size == 1
   
   /**
    * The parameter `trees` of this function is a list of code trees ordered
