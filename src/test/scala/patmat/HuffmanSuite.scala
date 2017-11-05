@@ -1,10 +1,8 @@
 package patmat
 
-import org.scalatest.FunSuite
-
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-
 import patmat.Huffman._
 
 @RunWith(classOf[JUnitRunner])
@@ -44,6 +42,17 @@ class HuffmanSuite extends FunSuite {
     assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
   }
 
+  test("simple decode") {
+    new TestTrees {
+      val simpleTree: CodeTree = Fork(
+                                        Fork(Leaf('a', 1), Leaf('b', 2), List('a', 'b'), 3),
+                                        Fork(Leaf('c', 3), Leaf('d', 4), List('d', 'e'), 7),
+                                        List('a', 'b', 'c', 'd'), 10
+                                     )
+      val bitList: List[Bit] = List(0, 0, 0, 1, 1, 0, 1, 1)
+      assert(decode(simpleTree, bitList) === "abcd".toList)
+    }
+  }
 
   test("decode and encode a very short text should be identity") {
     new TestTrees {
