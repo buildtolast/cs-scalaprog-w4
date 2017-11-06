@@ -46,11 +46,23 @@ class HuffmanSuite extends FunSuite {
     new TestTrees {
       val simpleTree: CodeTree = Fork(
                                         Fork(Leaf('a', 1), Leaf('b', 2), List('a', 'b'), 3),
-                                        Fork(Leaf('c', 3), Leaf('d', 4), List('d', 'e'), 7),
+                                        Fork(Leaf('c', 3), Leaf('d', 4), List('c', 'd'), 7),
                                         List('a', 'b', 'c', 'd'), 10
                                      )
       val bitList: List[Bit] = List(0, 0, 0, 1, 1, 0, 1, 1)
       assert(decode(simpleTree, bitList) === "abcd".toList)
+    }
+  }
+
+  test("simple encode") {
+    new TestTrees {
+      val simpleTree: CodeTree = Fork(
+        Fork(Leaf('a', 1), Leaf('b', 2), List('a', 'b'), 3),
+        Fork(Leaf('c', 3), Leaf('d', 4), List('c', 'd'), 7),
+        List('a', 'b', 'c', 'd'), 10
+      )
+      val bitList: List[Bit] = List(0, 0, 0, 1, 1, 0, 1, 1)
+      assert(encode(simpleTree)("abcd".toList) === bitList)
     }
   }
 
